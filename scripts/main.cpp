@@ -67,7 +67,7 @@ bool initWindow() {
         }
     }
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        std::cout<<"SDL_image could not initialize! SDL_image Error: " << IMG_GetError()<<'\n';
         success = false;
     }
     return success;

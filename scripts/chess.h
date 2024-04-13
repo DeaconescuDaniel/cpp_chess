@@ -4,18 +4,18 @@
 
 #endif
 
-#define W_PAWN_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_plt60.png)"
-#define B_PAWN_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_pdt60.png)"
-#define W_BISHOP_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_blt60.png)"
-#define B_BISHOP_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_bdt60.png)"
-#define W_KNIGHT_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_nlt60.png)"
-#define B_KNIGHT_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_ndt60.png)"
-#define W_ROOK_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_rlt60.png)"
-#define B_ROOK_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_rdt60.png)"
-#define W_QUEEN_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_qlt60.png)"
-#define B_QUEEN_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_qdt60.png)"
-#define W_KING_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_klt60.png)"
-#define B_KING_PATH R"(C:\Users\bests\OneDrive\Desktop\Extra\chess_cpp\resources\Chess_kdt60.png)"
+#define W_PAWN_PATH R"(..\resources\Chess_plt60.png)"
+#define B_PAWN_PATH R"(..\resources\Chess_pdt60.png)"
+#define W_BISHOP_PATH R"(..\resources\Chess_blt60.png)"
+#define B_BISHOP_PATH R"(..\resources\Chess_bdt60.png)"
+#define W_KNIGHT_PATH R"(..\resources\Chess_nlt60.png)"
+#define B_KNIGHT_PATH R"(..\resources\Chess_ndt60.png)"
+#define W_ROOK_PATH R"(..\resources\Chess_rlt60.png)"
+#define B_ROOK_PATH R"(..\resources\Chess_rdt60.png)"
+#define W_QUEEN_PATH R"(..\resources\Chess_qlt60.png)"
+#define B_QUEEN_PATH R"(..\resources\Chess_qdt60.png)"
+#define W_KING_PATH R"(..\resources\Chess_klt60.png)"
+#define B_KING_PATH R"(..\resources\Chess_kdt60.png)"
 
 typedef enum{
     WHITE,
