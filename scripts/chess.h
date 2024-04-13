@@ -51,11 +51,14 @@ public:
     SQUARE_COLOR color;
     SQUARE_STATUS  status;
     PIECE piece;
-    int drawx;
-    int drawy;
+    SDL_Rect drawRect;
 
     void drawSquare(Square square);
 
+    Square();
+
+    Square(SQUARE_COLOR color, SQUARE_STATUS status, PIECE piece, const SDL_Rect &drawRect);
 };
 
-void drawPiece(PIECE piece);
+void initializeBoard(Square (&board)[8][8]);
+const char* piecePath(PIECE piece);

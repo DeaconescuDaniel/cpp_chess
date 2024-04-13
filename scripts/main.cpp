@@ -11,29 +11,34 @@ SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Surface *windowSurface = NULL;
 SDL_Event currentEvent;
+Square boardMatrix[8][8];
 
 bool quit = false;
 
 int mouseX, mouseY;
 
-void drawBoard() {
-
+void drawSquare(Square square) {
     Uint32 color;
+    if(square.color==WHITE){
+        color=0xeeeed2;
+    }else{
+        color=0x769656;
+    }
+    SDL_Surface *surf = IMG_Load(piecePath(square.piece));
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
+    SDL_SetTextureBlendMode(texture,SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer,(Uint8)(color>>16),(Uint8)(color>>8),(Uint8)color,0);
+    SDL_RenderDrawRect(renderer,&square.drawRect);
+    SDL_RenderFillRect(renderer,&square.drawRect);
+    SDL_RenderCopy(renderer, texture, nullptr, &square.drawRect);
+    SDL_RenderPresent(renderer);
+}
+
+void drawBoard() {
+    initializeBoard(boardMatrix);
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            if ((i + j) % 2 == 0) {
-                color = SDL_MapRGB(windowSurface->format, 238, 238, 210);
-            } else {
-                color = SDL_MapRGB(windowSurface->format, 118, 150, 86);
-            }
-            SDL_Rect rect = {100 * j, 100 * i, 100, 100};
-            SDL_FillRect(windowSurface, &rect, color);
-            SDL_Surface *surf = IMG_Load(
-                    B_BISHOP_PATH);
-            SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
-            SDL_RenderClear(renderer);
-            SDL_RenderCopy(renderer, texture, NULL, &rect);
-            SDL_RenderPresent(renderer);
+            drawSquare(boardMatrix[i][j]);
         }
     }
 }
@@ -110,7 +115,7 @@ int main(int argc, char *argv[]) {
                 }
 
             }
-            SDL_RenderClear(renderer);
+ //           SDL_RenderClear(renderer);
 //            SDL_UpdateWindowSurface(window);
 //            SDL_RenderPresent(renderer);
         }
