@@ -69,7 +69,7 @@ void selectSquare(int mouseX, int mouseY) {
             drawSquare(selectedSquare);
         }
     } else {
-        if (whiteTurn && (hasBlackPiece(boardMatrix[i][j]) || boardMatrix[i][j].piece == NONE)) {
+        if (whiteTurn && (hasBlackPiece(boardMatrix[i][j]) || boardMatrix[i][j].piece == NONE) && boardMatrix[i][j].status!=SELECTED) {
             PIECE piece = selectedSquare.piece;
             selectedSquare.status = CLEAR;
             selectedSquare.piece = NONE;
@@ -79,7 +79,7 @@ void selectSquare(int mouseX, int mouseY) {
             drawSquare(boardMatrix[i][j]);
             selectedSquare.uninitialize();
             whiteTurn = !whiteTurn;
-        } else if (!whiteTurn && (hasWhitePiece(boardMatrix[i][j]) || boardMatrix[i][j].piece == NONE)) {
+        } else if (!whiteTurn && (hasWhitePiece(boardMatrix[i][j]) || boardMatrix[i][j].piece == NONE) && boardMatrix[i][j].status!=SELECTED) {
             PIECE piece = selectedSquare.piece;
             selectedSquare.status = CLEAR;
             selectedSquare.piece = NONE;
