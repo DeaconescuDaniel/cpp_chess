@@ -117,7 +117,7 @@ void initializeBoard(Square (&board)[8][8]) {
 }
 
 
-bool hasWhitePiece(Square square) {
+bool hasWhitePiece(const Square& square) {
     switch (square.piece) {
         case W_PAWN:
         case W_BISHOP:
@@ -131,7 +131,7 @@ bool hasWhitePiece(Square square) {
     }
 }
 
-bool hasBlackPiece(Square square) {
+bool hasBlackPiece(const Square& square) {
     switch (square.piece) {
         case B_PAWN:
         case B_BISHOP:

@@ -95,5 +95,5 @@ private:
 
 void initializeBoard(Square (&board)[8][8]);
 const char* piecePath(PIECE piece);
-bool hasBlackPiece(Square square);
-bool hasWhitePiece(Square square);
+bool hasBlackPiece(const Square& square);
+bool hasWhitePiece(const Square& square);
