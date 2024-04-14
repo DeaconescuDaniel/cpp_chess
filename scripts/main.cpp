@@ -7,38 +7,98 @@ const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
 
 
-SDL_Window *window = NULL;
-SDL_Renderer *renderer = NULL;
-SDL_Surface *windowSurface = NULL;
+SDL_Window *window = nullptr;
+SDL_Renderer *renderer = nullptr;
+SDL_Surface *windowSurface = nullptr;
 SDL_Event currentEvent;
 Square boardMatrix[8][8];
 
 bool quit = false;
-
+bool whiteTurn = true;
 int mouseX, mouseY;
+Square selectedSquare = Square();
+
 
 void drawSquare(Square square) {
     Uint32 color;
-    if(square.color==WHITE){
-        color=0xeeeed2;
-    }else{
-        color=0x769656;
+    switch (square.status) {
+        case CLEAR:
+            switch (square.color) {
+                case WHITE:
+                    color = CHESSBOARD_WHITE;
+                    break;
+                default:
+                    color = CHESSBOARD_GREEN;
+                    break;
+            }
+            break;
+        case SELECTED:
+            color = CHESSBOARD_SELECTED;
+            break;
+        case POTENTIAL_MOVE:
+            color = CHESSBOARD_MOVE;
+            break;
+        case POTENTIAL_TAKE:
+            color = CHESSBOARD_TAKE;
+            break;
+        default:
+            break;
     }
+
     SDL_Surface *surf = IMG_Load(piecePath(square.piece));
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
-    SDL_SetTextureBlendMode(texture,SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer,(Uint8)(color>>16),(Uint8)(color>>8),(Uint8)color,0);
-    SDL_RenderDrawRect(renderer,&square.drawRect);
-    SDL_RenderFillRect(renderer,&square.drawRect);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, SPLIT_COLOR(color), 0);
+    SDL_RenderDrawRect(renderer, &square.drawRect);
+    SDL_RenderFillRect(renderer, &square.drawRect);
     SDL_RenderCopy(renderer, texture, nullptr, &square.drawRect);
     SDL_RenderPresent(renderer);
+    SDL_FreeSurface(surf);
 }
+
+void selectSquare(int mouseX, int mouseY) {
+    int i = mouseY / 100, j = mouseX / 100;
+    if (!selectedSquare.isInitialized()) {
+        selectedSquare = boardMatrix[i][j];
+        if (hasWhitePiece(selectedSquare) && whiteTurn) {
+            selectedSquare.status = SELECTED;
+            drawSquare(selectedSquare);
+        } else if (hasBlackPiece(selectedSquare) && !whiteTurn) {
+            selectedSquare.status = SELECTED;
+            drawSquare(selectedSquare);
+        }
+    } else {
+        if (whiteTurn && (hasBlackPiece(boardMatrix[i][j]) || boardMatrix[i][j].piece == NONE)) {
+            PIECE piece = selectedSquare.piece;
+            selectedSquare.status = CLEAR;
+            selectedSquare.piece = NONE;
+            drawSquare(selectedSquare);
+            selectedSquare = boardMatrix[i][j];
+            selectedSquare.piece = piece;
+            drawSquare(selectedSquare);
+            selectedSquare.uninitialize();
+            whiteTurn = !whiteTurn;
+        } else if (!whiteTurn && (hasWhitePiece(boardMatrix[i][j]) || boardMatrix[i][j].piece == NONE)) {
+            PIECE piece = selectedSquare.piece;
+            selectedSquare.status = CLEAR;
+            selectedSquare.piece = NONE;
+            drawSquare(selectedSquare);
+            selectedSquare = boardMatrix[i][j];
+            selectedSquare.piece = piece;
+            drawSquare(selectedSquare);
+            selectedSquare.uninitialize();
+            whiteTurn = !whiteTurn;
+        }
+        return;
+    }
+}
+
 
 void drawBoard() {
     initializeBoard(boardMatrix);
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            drawSquare(boardMatrix[i][j]);
+    for (auto &i: boardMatrix) {
+        for (const auto &j: i) {
+            drawSquare(j);
         }
     }
 }
@@ -53,18 +113,18 @@ bool initWindow() {
         window = SDL_CreateWindow("Chess", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH,
                                   WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        SDL_SetRenderDrawColor(renderer,255,255,255,255);
-        if (window == NULL) {
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        if (window == nullptr) {
             std::cout << "Failed to create window: " << SDL_GetError() << std::endl;
             success = false;
         } else {
             windowSurface = SDL_GetWindowSurface(window);
 
-            if (windowSurface == NULL) {
+            if (windowSurface == nullptr) {
                 std::cout << "Failed to get the window surface: " << SDL_GetError() << std::endl;
                 success = false;
             } else {
-                SDL_FillRect(windowSurface, NULL, SDL_MapRGB(windowSurface->format, 255, 255, 255));
+                SDL_FillRect(windowSurface, nullptr, SDL_MapRGB(windowSurface->format, 255, 255, 255));
 
                 SDL_UpdateWindowSurface(window);
             }
@@ -72,7 +132,7 @@ bool initWindow() {
         }
     }
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        std::cout<<"SDL_image could not initialize! SDL_image Error: " << IMG_GetError()<<'\n';
+        std::cout << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << '\n';
         success = false;
     }
     return success;
@@ -81,7 +141,7 @@ bool initWindow() {
 void destroyWindow() {
     //Destroy window
     SDL_DestroyWindow(window);
-    window = NULL;
+    window = nullptr;
 
     //Quit SDL
     IMG_Quit();
@@ -105,6 +165,7 @@ int main(int argc, char *argv[]) {
                 if (currentEvent.button.button == SDL_BUTTON_LEFT) {
                     SDL_GetMouseState(&mouseX, &mouseY);
                     std::cout << "Mouse click => " << "x: " << mouseX << ", y: " << mouseY << std::endl;
+                    selectSquare(mouseX, mouseY);
                 }
             }
 
@@ -115,9 +176,6 @@ int main(int argc, char *argv[]) {
                 }
 
             }
- //           SDL_RenderClear(renderer);
-//            SDL_UpdateWindowSurface(window);
-//            SDL_RenderPresent(renderer);
         }
     }
 

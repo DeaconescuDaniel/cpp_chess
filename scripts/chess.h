@@ -3,7 +3,12 @@
 #define CHESS_CPP_CHESS_H
 
 #endif
-
+#define CHESSBOARD_WHITE 0xeeeed2
+#define CHESSBOARD_GREEN 0x769656
+#define CHESSBOARD_SELECTED 0xbaca44
+#define CHESSBOARD_MOVE 0xaaff00
+#define CHESSBOARD_TAKE 0xff809b
+#define SPLIT_COLOR(color) (Uint8) (color >> 16), (Uint8) (color >> 8), (Uint8) color
 #define W_PAWN_PATH R"(..\resources\Chess_plt60.png)"
 #define B_PAWN_PATH R"(..\resources\Chess_pdt60.png)"
 #define W_BISHOP_PATH R"(..\resources\Chess_blt60.png)"
@@ -52,13 +57,43 @@ public:
     SQUARE_STATUS  status;
     PIECE piece;
     SDL_Rect drawRect;
-
-    void drawSquare(Square square);
-
-    Square();
-
     Square(SQUARE_COLOR color, SQUARE_STATUS status, PIECE piece, const SDL_Rect &drawRect);
+    Square() : initialized(false) {}
+    bool isInitialized() const {
+        return initialized;
+    }
+    Square(const Square& other)
+            : color(other.color),
+              status(other.status),
+              piece(other.piece),
+              drawRect(other.drawRect),
+              initialized(other.initialized)
+    {}
+
+    Square& operator=(const Square& other) {
+        if (!initialized) {
+            color = other.color;
+            status = other.status;
+            piece = other.piece;
+            drawRect = other.drawRect;
+            initialized = true;
+        } else {
+            color = other.color;
+            status = other.status;
+            piece = other.piece;
+            drawRect = other.drawRect;
+        }
+        return *this;
+    }
+    void uninitialize() {
+        initialized = false;
+    }
+private:
+    bool initialized;
+
 };
 
 void initializeBoard(Square (&board)[8][8]);
 const char* piecePath(PIECE piece);
+bool hasBlackPiece(Square square);
+bool hasWhitePiece(Square square);

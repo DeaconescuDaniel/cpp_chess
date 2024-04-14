@@ -5,9 +5,9 @@
 Square::Square(SQUARE_COLOR color, SQUARE_STATUS status, PIECE piece, const SDL_Rect &drawRect) : color(color),
                                                                                                   status(status),
                                                                                                   piece(piece),
-                                                                                                  drawRect(drawRect) {}
+                                                                                                  drawRect(drawRect),
+                                                                                                  initialized(true){}
 
-Square::Square() = default;
 
 const char *piecePath(PIECE piece) {
     switch (piece) {
@@ -112,5 +112,35 @@ void initializeBoard(Square (&board)[8][8]) {
             board[i][j] = Square(color, CLEAR, piece, rect);
 
         }
+    }
+
+}
+
+
+bool hasWhitePiece(Square square) {
+    switch (square.piece) {
+        case W_PAWN:
+        case W_BISHOP:
+        case W_KNIGHT:
+        case W_ROOK:
+        case W_QUEEN:
+        case W_KING:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool hasBlackPiece(Square square) {
+    switch (square.piece) {
+        case B_PAWN:
+        case B_BISHOP:
+        case B_KNIGHT:
+        case B_ROOK:
+        case B_QUEEN:
+        case B_KING:
+            return true;
+        default:
+            return false;
     }
 }
